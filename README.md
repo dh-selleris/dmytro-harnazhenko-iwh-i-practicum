@@ -64,7 +64,6 @@ If a HubSpot request fails, the route logs the full JSON error response to the s
 - The homepage request passes an explicit `properties` parameter. Without it HubSpot returns only its own default properties for each record.
 - Blank form fields are left out of the create payload, so the number property is never sent an empty string.
 - `HUBSPOT_API` can be overridden through the environment; it defaults to `https://api.hubapi.com`.
-- `views/contacts.pug` is the sample template supplied with the starter repository and is kept for reference only.
 
 ## Pre-requisites:
 - Using [Node](https://nodejs.org/en/download) and node packages
