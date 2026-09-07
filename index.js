@@ -18,13 +18,27 @@ if (!PRIVATE_APP_ACCESS || !CUSTOM_OBJECT_TYPE) {
     console.warn('Missing PRIVATE_APP_ACCESS or CUSTOM_OBJECT_TYPE. Copy env.example to .env and fill both in.');
 }
 
+// * The Lighthouse custom properties, defined once. The form fields, the properties sent to
+// * HubSpot and the homepage table columns are all derived from this list, so an internal
+// * property name is only ever written in one place.
+const COLUMNS = [
+    { key: 'name', label: 'Name', type: 'text' },
+    { key: 'country', label: 'Country', type: 'text' },
+    { key: 'focal_height_meters', label: 'Focal height (m)', type: 'number' },
+    { key: 'light_characteristic', label: 'Light characteristic', type: 'text' }
+];
+
 // TODO: ROUTE 1 - Create a new app.get route for the homepage to call your custom object data. Pass this data along to the front-end and create a new pug template in the views folder.
 
 // * Code for Route 1 goes here
 
-// TODO: ROUTE 2 - Create a new app.get route for the form to create or update new custom object data. Send this data along in the next route.
-
-// * Code for Route 2 goes here
+// ROUTE 2 - Renders the form used to create a new Lighthouse record.
+app.get('/update-cobj', (req, res) => {
+    res.render('updates', {
+        title: 'Update Custom Object Form | Integrating With HubSpot I Practicum',
+        columns: COLUMNS
+    });
+});
 
 // TODO: ROUTE 3 - Create a new app.post route for the custom objects form to create or update your custom object data. Once executed, redirect the user to the homepage.
 
