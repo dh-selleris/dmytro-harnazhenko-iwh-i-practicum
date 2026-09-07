@@ -152,3 +152,19 @@ body {
     margin: 0;
     color: #516f90;
 }
+
+.error-box {
+    max-width: 600px;
+    padding: 24px 32px;
+    background-color: #fff;
+    border: solid 1px #dfe3eb;
+    border-left: solid 4px #ff7a59;
+    border-radius: 6px;
+    box-shadow: 3px 2px 6px lightgrey;
+}
+
+.error-hint {
+    margin-top: 12px;
+    color: #516f90;
+    font-size: 14px;
+}

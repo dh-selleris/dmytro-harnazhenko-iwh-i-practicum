@@ -63,7 +63,10 @@ app.get('/', async (req, res) => {
         });
     } catch (error) {
         logApiError('Could not fetch the lighthouses:', error);
-        res.status(500).send('Could not load the lighthouses from HubSpot. Check the server log for details.');
+        res.status(500).render('error', {
+            title: 'Something went wrong | Integrating With HubSpot I Practicum',
+            message: 'The lighthouses could not be loaded from HubSpot.'
+        });
     }
 });
 
@@ -95,7 +98,10 @@ app.post('/update-cobj', async (req, res) => {
         res.redirect('/');
     } catch (error) {
         logApiError('Could not create the lighthouse:', error);
-        res.status(500).send('Could not create the lighthouse in HubSpot. Check the server log for details.');
+        res.status(500).render('error', {
+            title: 'Something went wrong | Integrating With HubSpot I Practicum',
+            message: 'The lighthouse could not be created in HubSpot.'
+        });
     }
 });
 
