@@ -18,6 +18,20 @@ if (!PRIVATE_APP_ACCESS || !CUSTOM_OBJECT_TYPE) {
     console.warn('Missing PRIVATE_APP_ACCESS or CUSTOM_OBJECT_TYPE. Copy env.example to .env and fill both in.');
 }
 
+// * Optional override. Falls back to the public HubSpot API host when HUBSPOT_API is not set.
+const HUBSPOT_API = process.env.HUBSPOT_API || 'https://api.hubapi.com';
+
+const HUBSPOT_HEADERS = {
+    Authorization: `Bearer ${PRIVATE_APP_ACCESS}`,
+    'Content-Type': 'application/json'
+};
+
+// * HubSpot names the offending property in the JSON error body, so log it in full.
+const logApiError = (message, error) => {
+    const details = error.response ? error.response.data : error.message;
+    console.error(message, typeof details === 'string' ? details : JSON.stringify(details, null, 2));
+};
+
 // * The Lighthouse custom properties, defined once. The form fields, the properties sent to
 // * HubSpot and the homepage table columns are all derived from this list, so an internal
 // * property name is only ever written in one place.
@@ -40,9 +54,29 @@ app.get('/update-cobj', (req, res) => {
     });
 });
 
-// TODO: ROUTE 3 - Create a new app.post route for the custom objects form to create or update your custom object data. Once executed, redirect the user to the homepage.
+// ROUTE 3 - Creates a new Lighthouse record from the submitted form data, then redirects home.
+app.post('/update-cobj', async (req, res) => {
+    const properties = {};
 
-// * Code for Route 3 goes here
+    for (const column of COLUMNS) {
+        const value = (req.body[column.key] || '').trim();
+
+        // Blank fields are left out of the payload so the number property is never sent an empty string.
+        if (value !== '') {
+            properties[column.key] = value;
+        }
+    }
+
+    const createLighthouse = `${HUBSPOT_API}/crm/v3/objects/${CUSTOM_OBJECT_TYPE}`;
+
+    try {
+        await axios.post(createLighthouse, { properties }, { headers: HUBSPOT_HEADERS });
+        res.redirect('/');
+    } catch (error) {
+        logApiError('Could not create the lighthouse:', error);
+        res.status(500).send('Could not create the lighthouse in HubSpot. Check the server log for details.');
+    }
+});
 
 /** 
 * * This is sample code to give you a reference for how you should structure your calls. 
