@@ -1,0 +1,31 @@
+doctype html
+html
+    head
+        title= title
+        meta(name="viewport" content="width=device-width, initial-scale=1")
+        link(rel="stylesheet", href="/css/style.css")
+    body
+        .page
+            h1 Add a lighthouse
+            p.actions
+                a(href="/") Return to the homepage
+            .form-wrapper
+                if error
+                    p.form-error= error
+                form(method="POST" action="/update-cobj")
+                    each column in columns
+                        - const fieldError = fieldErrors ? fieldErrors[column.key] : null
+                        label(for=column.key)= column.label
+                        input(
+                            type=column.type
+                            id=column.key
+                            name=column.key
+                            value=(values ? values[column.key] : undefined)
+                            required=column.required
+                            step=(column.type === 'number' ? 'any' : false)
+                            class=(fieldError ? 'input-error' : undefined)
+                            aria-describedby=(fieldError ? `${column.key}-error` : undefined)
+                        )
+                        if fieldError
+                            p.field-error(id=`${column.key}-error`)= fieldError
+                    input(type="submit" value="Create lighthouse")
