@@ -42,9 +42,30 @@ const COLUMNS = [
     { key: 'light_characteristic', label: 'Light characteristic', type: 'text' }
 ];
 
-// TODO: ROUTE 1 - Create a new app.get route for the homepage to call your custom object data. Pass this data along to the front-end and create a new pug template in the views folder.
+// ROUTE 1 - Homepage. Reads the Lighthouse records and renders them as a table.
+app.get('/', async (req, res) => {
+    const lighthouses = `${HUBSPOT_API}/crm/v3/objects/${CUSTOM_OBJECT_TYPE}`;
 
-// * Code for Route 1 goes here
+    // * The custom properties have to be requested explicitly, otherwise HubSpot only
+    // * returns its own default set of properties for each record.
+    const params = {
+        limit: 100,
+        properties: COLUMNS.map((column) => column.key).join(',')
+    };
+
+    try {
+        const resp = await axios.get(lighthouses, { headers: HUBSPOT_HEADERS, params });
+
+        res.render('homepage', {
+            title: 'Lighthouses | Integrating With HubSpot I Practicum',
+            columns: COLUMNS,
+            data: resp.data.results
+        });
+    } catch (error) {
+        logApiError('Could not fetch the lighthouses:', error);
+        res.status(500).send('Could not load the lighthouses from HubSpot. Check the server log for details.');
+    }
+});
 
 // ROUTE 2 - Renders the form used to create a new Lighthouse record.
 app.get('/update-cobj', (req, res) => {

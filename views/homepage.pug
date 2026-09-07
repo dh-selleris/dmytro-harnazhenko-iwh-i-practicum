@@ -1,0 +1,24 @@
+doctype html
+html
+    head
+        title= title
+        meta(name="viewport" content="width=device-width, initial-scale=1")
+        link(rel="stylesheet", href="/css/style.css")
+    body
+        .page
+            h1 Lighthouses
+            p.actions
+                a(href="/update-cobj") Add to this table
+            if data && data.length
+                table.records
+                    thead
+                        tr
+                            each column in columns
+                                th= column.label
+                    tbody
+                        each record in data
+                            tr
+                                each column in columns
+                                    td= record.properties[column.key]
+            else
+                p.empty No lighthouse records yet. Use the link above to add the first one.

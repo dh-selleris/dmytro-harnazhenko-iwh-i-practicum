@@ -5,18 +5,19 @@ html
         meta(name="viewport" content="width=device-width, initial-scale=1")
         link(rel="stylesheet", href="/css/style.css")
     body
-        h1 Add a lighthouse
-        .form-wrapper
-            form(method="POST" action="/update-cobj")
-                each column in columns
-                    label(for=column.key)= column.label
-                    input(
-                        type=column.type
-                        id=column.key
-                        name=column.key
-                        required=(column.key === 'name')
-                        step=(column.type === 'number' ? 'any' : false)
-                    )
-                input(type="submit" value="Create lighthouse")
-            p
+        .page
+            h1 Add a lighthouse
+            p.actions
                 a(href="/") Return to the homepage
+            .form-wrapper
+                form(method="POST" action="/update-cobj")
+                    each column in columns
+                        label(for=column.key)= column.label
+                        input(
+                            type=column.type
+                            id=column.key
+                            name=column.key
+                            required=(column.key === 'name')
+                            step=(column.type === 'number' ? 'any' : false)
+                        )
+                    input(type="submit" value="Create lighthouse")

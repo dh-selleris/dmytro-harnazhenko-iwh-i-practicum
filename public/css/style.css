@@ -7,7 +7,8 @@ body, * {
 }
 
 h1 {
-    margin: 1rem;
+    margin: 0 0 16px 0;
+    font-weight: 500;
 }
 
 .cards {
@@ -31,13 +32,18 @@ h1 {
 }
 
 .form-wrapper {
-    font-size: 18px;
-    max-width: 768px;
-    margin: 2rem auto;
-    padding: 2rem;
-    border: solid 1px lightgrey;
-    border-radius: 15px;
+    font-size: 20px;
+    max-width: 600px;
+    margin: 0;
+    padding: 32px 40px 40px 40px;
+    background-color: #fff;
+    border: solid 1px #dfe3eb;
+    border-radius: 6px;
     box-shadow: 3px 2px 6px lightgrey;
+}
+
+.form-wrapper label:first-of-type {
+    margin-top: 0;
 }
 
 label, input {
@@ -46,13 +52,103 @@ label, input {
     font-size: inherit;
 }
 
-input[type="text"] {
-    padding: .25rem;
+input[type="text"],
+input[type="number"] {
+    padding: 10px 12px;
+    width: 100%;
+    box-sizing: border-box;
+    border: solid 1px #cbd6e2;
+    border-radius: 3px;
+    color: inherit;
+}
+
+input[type="text"]:focus,
+input[type="number"]:focus {
+    outline: none;
+    border-color: #0091ae;
 }
 
 input[type="submit"] {
-    background-color: lightgrey;
+    background-color: #ff7a59;
+    color: #fff;
     border: none;
-    padding: .375rem 1rem;
-    margin-top: 10px;
+    border-radius: 3px;
+    padding: 12px 28px;
+    margin-top: 28px;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+input[type="submit"]:hover {
+    background-color: #ff5c35;
+}
+
+label {
+    margin-top: 20px;
+    color: #516f90;
+}
+
+/* Custom object table on the homepage */
+
+body {
+    background-color: #f5f8fa;
+    color: #33475b;
+}
+
+/* Centred content column, everything left-aligned inside it. */
+.page {
+    max-width: 768px;
+    margin: 0 auto;
+    padding: 40px 24px;
+    box-sizing: border-box;
+}
+
+.actions {
+    margin: 0 0 20px 0;
+}
+
+.actions a {
+    color: #0091ae;
+    font-weight: 500;
+    text-decoration: none;
+}
+
+.actions a:hover {
+    text-decoration: underline;
+}
+
+.records {
+    border-collapse: collapse;
+    margin: 0;
+    background-color: #fff;
+    border: solid 1px #dfe3eb;
+    border-radius: 6px;
+    box-shadow: 3px 2px 6px lightgrey;
+}
+
+.records th,
+.records td {
+    padding: 10px 16px;
+    border-bottom: solid 1px #dfe3eb;
+    text-align: left;
+    vertical-align: top;
+}
+
+.records th {
+    background-color: #eaf0f6;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.records tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.records tbody tr:hover {
+    background-color: #f5f8fa;
+}
+
+.empty {
+    margin: 0;
+    color: #516f90;
 }
