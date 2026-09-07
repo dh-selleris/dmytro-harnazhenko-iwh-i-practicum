@@ -168,3 +168,23 @@ body {
     color: #516f90;
     font-size: 14px;
 }
+
+input.input-error {
+    border-color: #f2545b;
+}
+
+.field-error {
+    margin-top: 6px;
+    color: #c02b33;
+    font-size: 15px;
+}
+
+.form-error {
+    margin-bottom: 24px;
+    padding: 12px 16px;
+    background-color: #fef1f0;
+    border-left: solid 4px #f2545b;
+    border-radius: 3px;
+    font-size: 16px;
+    color: #33475b;
+}

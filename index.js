@@ -36,11 +36,33 @@ const logApiError = (message, error) => {
 // * HubSpot and the homepage table columns are all derived from this list, so an internal
 // * property name is only ever written in one place.
 const COLUMNS = [
-    { key: 'name', label: 'Name', type: 'text' },
+    { key: 'name', label: 'Name', type: 'text', required: true, unique: true },
     { key: 'country', label: 'Country', type: 'text' },
     { key: 'focal_height_meters', label: 'Focal height (m)', type: 'number' },
     { key: 'light_characteristic', label: 'Light characteristic', type: 'text' }
 ];
+
+// * A rejected value belongs to one field, so HubSpot's validation errors are turned into a
+// * message for that field. HubSpot names the property in the message, for example
+// * "...propertyName=name, value=Test...", so nothing here is tied to a particular property.
+const fieldErrorFrom = (details) => {
+    if (typeof details.message !== 'string') {
+        return null;
+    }
+
+    const match = details.message.match(/propertyName=([a-zA-Z0-9_]+)/);
+    const column = match ? COLUMNS.find((candidate) => candidate.key === match[1]) : null;
+
+    if (!column) {
+        return null;
+    }
+
+    const message = details.message.includes('already has that value')
+        ? 'Entry must be unique.'
+        : 'HubSpot rejected this value.';
+
+    return { [column.key]: message };
+};
 
 // ROUTE 1 - Homepage. Reads the Lighthouse records and renders them as a table.
 app.get('/', async (req, res) => {
@@ -70,10 +92,12 @@ app.get('/', async (req, res) => {
     }
 });
 
+const FORM_TITLE = 'Update Custom Object Form | Integrating With HubSpot I Practicum';
+
 // ROUTE 2 - Renders the form used to create a new Lighthouse record.
 app.get('/update-cobj', (req, res) => {
     res.render('updates', {
-        title: 'Update Custom Object Form | Integrating With HubSpot I Practicum',
+        title: FORM_TITLE,
         columns: COLUMNS
     });
 });
@@ -98,6 +122,25 @@ app.post('/update-cobj', async (req, res) => {
         res.redirect('/');
     } catch (error) {
         logApiError('Could not create the lighthouse:', error);
+
+        const details = error.response ? error.response.data : {};
+
+        // * HubSpot rejects the record itself when a value is invalid, for example when the
+        // * unique Name property is already taken. That is the user's mistake rather than a
+        // * server fault, so the form is shown again with an explanation and their input kept.
+        if (details.category === 'VALIDATION_ERROR') {
+            const fieldErrors = fieldErrorFrom(details);
+
+            return res.status(400).render('updates', {
+                title: FORM_TITLE,
+                columns: COLUMNS,
+                values: req.body,
+                fieldErrors,
+                // * Only fall back to a form-wide message when the offending field is unknown.
+                error: fieldErrors ? null : 'HubSpot rejected these values. Please check the fields and try again.'
+            });
+        }
+
         res.status(500).render('error', {
             title: 'Something went wrong | Integrating With HubSpot I Practicum',
             message: 'The lighthouse could not be created in HubSpot.'
